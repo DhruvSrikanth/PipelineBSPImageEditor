@@ -62,7 +62,7 @@ func RunSequential(config Config) {
 	}
 }
 
-func applyEffect(img *Image, effect string, startY, endY int) {
+func applyEffectSeq(img *Image, effect string, startY, endY int) {
 	switch effect {
 	case "G":
 		img.Grayscale(startY, endY)
@@ -79,7 +79,7 @@ func applyEffect(img *Image, effect string, startY, endY int) {
 
 func processEffectsSeq(img *Image, effects []string, startY, endY int) {
 	for _, effect := range effects {
-		applyEffect(img, effect, startY, endY)
+		applyEffectSeq(img, effect, startY, endY)
 		img.Swap()
 	}
 }
