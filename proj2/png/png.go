@@ -74,7 +74,12 @@ func (img *Image) Save(filePath string) error {
 	return nil
 }
 
-//clamp will clamp the comp parameter to zero if it is less than zero or to 65535 if the comp parameter
+// Function to swap the in and out images
+func (img *Image) Swap() {
+	img.in, img.out = img.out, img.in
+}
+
+// clamp will clamp the comp parameter to zero if it is less than zero or to 65535 if the comp parameter
 // is greater than 65535.
 func clamp(comp float64) uint16 {
 	return uint16(math.Min(65535, math.Max(0, comp)))
