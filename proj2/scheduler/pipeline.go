@@ -11,6 +11,7 @@ import (
 
 type ImageTask = task.ImageTask
 
+// Run the pipeline model for generating and performing the tasks
 func RunPipeline(config Config) {
 	dataDirs := strings.Split(config.DataDirs, "+")
 	outputPath := "../data/out/%s_%s"
@@ -20,11 +21,17 @@ func RunPipeline(config Config) {
 	imageTasksDone := make(chan bool, config.ThreadCount)
 	imageTasksChan := make(chan ImageTask)
 
+	// Spawn the image workers waiting for the image tasks
+	// Note:
+	// Channels require a goroutine to be waiting for data to be sent on the channel
+	// If there is no goroutine waiting for data to be sent on the channel, the program will deadlock
+	// This is why we spawn the image workers before we generate the image tasks
 	for i := 0; i < config.ThreadCount; i++ {
 		go imageWorker(imageTasksChan, imageTasksDone, config)
 	}
+
 	// Create the channel
-	imageTaskGenerator(dataDirs, inputPath, outputPath, imageTasksChan)
+	imageTaskGeneratorPipe(dataDirs, inputPath, outputPath, imageTasksChan)
 
 	// Wait for all the go routines to finish
 	for i := 0; i < config.ThreadCount; i++ {
@@ -33,7 +40,8 @@ func RunPipeline(config Config) {
 
 }
 
-func imageTaskGenerator(dataDirs []string, inputPath, outputPath string, imageTaskChan chan<- ImageTask) {
+// Generate the image tasks
+func imageTaskGeneratorPipe(dataDirs []string, inputPath, outputPath string, imageTaskChan chan<- ImageTask) {
 	effectsPathFile := "../data/effects.txt"
 	effectsFile, err := os.Open(effectsPathFile)
 	if err != nil {
@@ -78,6 +86,7 @@ func imageTaskGenerator(dataDirs []string, inputPath, outputPath string, imageTa
 	close(imageTaskChan)
 }
 
+// Spawn the image workers
 func imageWorker(imageTasksChan <-chan ImageTask, imageTasksDone chan<- bool, config Config) {
 	// Process the tasks
 	for {
@@ -93,12 +102,13 @@ func imageWorker(imageTasksChan <-chan ImageTask, imageTasksDone chan<- bool, co
 	}
 }
 
+// Perform the image task i.e. applying the effects
 func processImageTask(imageTask ImageTask, config Config) {
 	// Apply the effects
 	effectDone := make(chan bool, config.ThreadCount)
 	for _, effect := range imageTask.Effects {
 		// Process the effect
-		processEffect(effect, imageTask.Image, effectDone, config)
+		processEffectPipe(effect, imageTask.Image, effectDone, config)
 
 		// Wait for the effect to finish
 		for i := 0; i < config.ThreadCount; i++ {
@@ -119,7 +129,8 @@ func processImageTask(imageTask ImageTask, config Config) {
 	}
 }
 
-func processEffect(effect string, img *png.Image, effectDone chan<- bool, config Config) {
+// Spawn the effect workers and distribute the work
+func processEffectPipe(effect string, img *png.Image, effectDone chan<- bool, config Config) {
 	// Define the work per thread
 	workPerThread := img.Bounds.Max.Y / config.ThreadCount
 	for threadIdx := 0; threadIdx < config.ThreadCount-1; threadIdx++ {
@@ -127,18 +138,18 @@ func processEffect(effect string, img *png.Image, effectDone chan<- bool, config
 		endIdx := startIdx + workPerThread
 
 		// Apply the effect
-		go applyEffect(effect, img, startIdx, endIdx, effectDone)
+		go applyEffectPipe(effect, img, startIdx, endIdx, effectDone)
 	}
 
 	// Apply the effect for the last thread
 	startIdx := (config.ThreadCount - 1) * workPerThread
 	endIdx := img.Bounds.Max.Y
 
-	// Apply the effect
-	go applyEffect(effect, img, startIdx, endIdx, effectDone)
+	go applyEffectPipe(effect, img, startIdx, endIdx, effectDone)
 }
 
-func applyEffect(effect string, img *png.Image, startY, endY int, effectDone chan<- bool) {
+// Apply the effect to a segment of the image
+func applyEffectPipe(effect string, img *png.Image, startY, endY int, effectDone chan<- bool) {
 	// Apply the effect
 	switch effect {
 	case "G":

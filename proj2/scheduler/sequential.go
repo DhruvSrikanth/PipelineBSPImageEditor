@@ -12,6 +12,7 @@ import (
 type Task = task.Task
 type Image = png.Image
 
+// Run the sequential model for generating and performing the tasks
 func RunSequential(config Config) {
 	dataDirs := strings.Split(config.DataDirs, "+")
 	outputPath := "../data/out/%s_%s"
@@ -62,6 +63,7 @@ func RunSequential(config Config) {
 	}
 }
 
+// Apply the effect to the image
 func applyEffectSeq(img *Image, effect string, startY, endY int) {
 	switch effect {
 	case "G":
@@ -77,7 +79,9 @@ func applyEffectSeq(img *Image, effect string, startY, endY int) {
 	}
 }
 
+// Process the effects for an image
 func processEffectsSeq(img *Image, effects []string, startY, endY int) {
+	// Process all effects and swap the buffers after each effect
 	for _, effect := range effects {
 		applyEffectSeq(img, effect, startY, endY)
 		img.Swap()

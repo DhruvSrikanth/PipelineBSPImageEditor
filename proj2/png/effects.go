@@ -75,6 +75,7 @@ func conv2D(img *Image, kernel [][]float64, startY, endY int) {
 	bounds := img.out.Bounds()
 	for y := startY; y < endY; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			// For each pixel, compute the inner product of the image and kernel
 			rOut, gOut, bOut, aOut := frobeniusNorm(img, kernel, x, y)
 
 			// Clamp the values
@@ -106,10 +107,11 @@ func frobeniusNorm(img *Image, kernel [][]float64, x, y int) (float64, float64, 
 	gOut := 0.0
 	bOut := 0.0
 	aOut := uint32(0)
+	var imgX, imgY int
 	for j := 0; j < m; j++ {
-		imgY := y + j - shiftY
+		imgY = y + j - shiftY
 		for i := 0; i < n; i++ {
-			imgX := x + i - shiftX
+			imgX = x + i - shiftX
 
 			// If the pixel is outside the image, use 0s i.e skip
 			if imgY < bounds.Min.Y || imgY > bounds.Max.Y-1 || imgX < bounds.Min.X || imgX > bounds.Max.X-1 {
@@ -123,6 +125,8 @@ func frobeniusNorm(img *Image, kernel [][]float64, x, y int) (float64, float64, 
 			rOut += float64(rIn) * kernel[j][i]
 			gOut += float64(gIn) * kernel[j][i]
 			bOut += float64(bIn) * kernel[j][i]
+
+			// Alpha remains the same for each pixel (0,0) offset index
 			if j == shiftY && i == shiftX {
 				aOut = aIn
 			}
