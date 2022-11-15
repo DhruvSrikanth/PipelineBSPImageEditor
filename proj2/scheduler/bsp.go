@@ -101,6 +101,11 @@ func imageTaskGeneratorBSP(dataDirs []string, inputPath, outputPath string, imag
 // Perform the work done by a BSP worker
 func RunBSPWorker(id int, ctx *bspWorkerContext) {
 	for {
+		// If all tasks are done, break
+		if ctx.taskIdx == len(ctx.imageTasks) {
+			break
+		}
+
 		// Determine work per thread for the current task
 		workPerThread := ctx.imageTasks[ctx.taskIdx].Image.Bounds.Max.Y / ctx.numThreads
 
@@ -139,6 +144,7 @@ func RunBSPWorker(id int, ctx *bspWorkerContext) {
 				ctx.taskIdx += 1
 				// If all tasks are done, break
 				if ctx.taskIdx == len(ctx.imageTasks) {
+					ctx.cond.Broadcast()
 					ctx.mutex.Unlock()
 					break
 				} else {
