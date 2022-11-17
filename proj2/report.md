@@ -136,11 +136,49 @@ The graph of speedups obtained can be seen below -
 The graphs will be created within the `benchmark` directory. The computation of the speedups along with the storing of each of the benchmarking timings and the plotting of the stored data happens by using `benchmark_graph.py` which is called from within `benchmark-proj2.sh` (both reside in the `benchmark` directory).
 
 
-The following observations can be made from the graph - 
+The following observations can be made from the **pipeline** mode graph - 
 
-1. 
+1. An overall speedup is seen for all threads tested with, on all dataset sizes. This implies that splitting the work across multiple threads allows a improvement in compute time greater than the cost of spawning and managing the threads.
+
+2. We see that for threads **6, 8, and 12**, there is a decrease is speedup compared to previous threads or there is no additional speedup seen (in the cases of the big and small datasets). This is because for each task, there are more threads spawned. This means that there are more threads to spawn and manage, therefore, the overhead cost is increased quandratically for the number of threads spawned. For the problem sizes, we are not able to amortize the cost of this overhead which results in a negative or 0 slope in the speedup lines. An additional reason for the decrease (or no change) in speedup is because we have a machine with a certain number of logical cores available. Based on the architecture, if more threads are spawned than the number of logical cores, they will wait for a logical core to free up before being allowed to process their assigned workloads leading to increasing wait times and contention on the bus.
+
+3. We are able to observe greater speedup in the `big` dataset as we are able to amoritze the cost of spawning so many threads given the larger workload for each thread.
+
+
+The following observations can be made from the **bsp** mode graph - 
+
+1. An overall speedup is seen for all threads tested with, on all dataset sizes. This implies that splitting the work across multiple threads allows a improvement in compute time greater than the cost of spawning and managing the threads.
+
+2. We are able to observe greater speedup as the size of the dataset increases. This is because we are able to amoritze the cost of spawning so many threads given the larger workload for each thread.
+
+3. We see that for threads **8, and 12**, there is a decrease is speedup compared to previous threads or there is no additional speedup seen. This is because there are more threads waiting for the others to finish before moving on to the next effect/image. An additional reason for the decrease (or no change) in speedup is because we have a machine with a certain number of logical cores available. Based on the architecture, if more threads are spawned than the number of logical cores, they will wait for a logical core to free up before being allowed to process their assigned workloads leading to increasing wait times and contention on the bus. Since all threads work on one effect of one image at a time, there is a lot more time spent waiting for threads than in the pipeline version, which is why we are seeing such a drastic decrease in speedup. In addition, this is contributing to the overall worse speedup in bsp compared to the pipeline version.
 
 
 ### Questions About Implementation - 
 
-1. 
+1. What are the hotspots and bottlenecks in your sequential program?
+
+    The hotspot in the sequential program is the convolution operation, since it needs to be applied over the entire image using a sequential 2D sliding window.
+
+    The bottleneck in the program that one effect of one image is processed at a time, leading to a very tight bottleneck and low throughput.
+
+
+2. Which parallel implementation is performing better? Why do you think it is?
+
+   Speedup is better in the pipeline version than in bsp. Based on the architecture, if more threads are spawned than the number of logical cores, they will wait for a logical core to free up before being allowed to process their assigned workloads leading to increasing wait times and contention on the bus. Since all threads work on one effect of one image at a time, there is a lot more time spent waiting for threads than in the pipeline version, which is why we are seeing such a drastic decrease in speedup in speedup in the bsp version compared to the pipeline version. 
+
+
+3. Does the problem size (i.e., the data size) affect performance?
+
+    The increase in problem size leads to better speedup as there is more parallelism that can take place. This means that each thread can take up more work and we are able to better amortize the cost of spawning and managing the threads.
+
+
+4. The Go runtime scheduler uses an N:M scheduler. However, how would the performance measurements be different if it used a 1:1 or N:1 scheduler?
+
+    The performance measurements would be better for the bsp mode in a 
+
+
+We would see increases in performance by parallelizing the convolution operation in a 2D manner i.e more are involved in the covolution operation by allocating square grids rather than strips. However, a better way would be to parallelize the kernel computation i.e. use a map reduce where each thread computes the element wise product between a kernel and patch in the image and the sum is found by accumulation over all products. This would increase performance as we are distributing the product-wise operation. As the size of the kernel increases, we would see better speedups with this parallelization scheme.
+
+
+ 
