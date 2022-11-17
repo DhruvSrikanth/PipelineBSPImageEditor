@@ -98,11 +98,12 @@ def plot_speedups(num_threads, speedups, mode):
 
     plt.xlabel('Number of threads')
     plt.ylabel('Speedup')
-    plt.title(f'Editor Speedup Graph {mode}')
+    plt.title(f'Editor Speedup Graph ({mode})')
     plt.legend(loc='best')
     plt.tight_layout()
     plt.grid()
-    plt.savefig('speedup.png')
+    mode = mode.lower()
+    plt.savefig(f'{mode}-speedup.png')
 
 if __name__ == '__main__':
     # The different problem sizes to benchmark.
