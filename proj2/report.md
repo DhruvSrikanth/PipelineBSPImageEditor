@@ -1,4 +1,4 @@
-# Project: Twitter Feed (Modeled as a Bounded-Buffer Problem)
+# Project: Image Editor
 
 ### Project Description - 
 
