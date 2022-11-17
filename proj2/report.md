@@ -175,7 +175,9 @@ The following observations can be made from the **bsp** mode graph -
 
 4. The Go runtime scheduler uses an N:M scheduler. However, how would the performance measurements be different if it used a 1:1 or N:1 scheduler?
 
-    The performance measurements would be better for the bsp mode in a 
+    The performance measurements would be better for the bsp mode in a 1:1 scheduler since there each thread has to wait for all threads to finish before moving on to the next effect/image. By associating 1 go routine with 1 kernel thread, we will avoid contention and each thread will be able to finish it's work faster leading to less wait times for the other threads before moving on to the next effect/image task.
+
+    The performance measurements would be better for the pipeline mode in a N:1 thread since we would enable 1 kernel thread to perform the entire workload through N go routines on an image whilst other kernel threads can work on their respective images. 
 
 
 We would see increases in performance by parallelizing the convolution operation in a 2D manner i.e more are involved in the covolution operation by allocating square grids rather than strips. However, a better way would be to parallelize the kernel computation i.e. use a map reduce where each thread computes the element wise product between a kernel and patch in the image and the sum is found by accumulation over all products. This would increase performance as we are distributing the product-wise operation. As the size of the kernel increases, we would see better speedups with this parallelization scheme.
