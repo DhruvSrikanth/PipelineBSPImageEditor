@@ -126,11 +126,11 @@ The graph of speedups obtained can be seen below -
 
 1. Pipeline mode - 
 
-![benchmarking_pipeline](./pipeline-speedup.png)
+    ![benchmarking_pipeline](./benchmark/pipeline-speedup.png)
 
 2. BSP mode - 
 
-![benchmarking_bsp](./bsp-speedup.png)
+    ![benchmarking_bsp](./benchmark/bsp-speedup.png)
 
 
 The graphs will be created within the `benchmark` directory. The computation of the speedups along with the storing of each of the benchmarking timings and the plotting of the stored data happens by using `benchmark_graph.py` which is called from within `benchmark-proj2.sh` (both reside in the `benchmark` directory).
