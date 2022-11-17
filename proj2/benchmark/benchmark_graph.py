@@ -104,6 +104,7 @@ def plot_speedups(num_threads, speedups, mode):
     plt.grid()
     mode = mode.lower()
     plt.savefig(f'{mode}-speedup.png')
+    plt.clf()
 
 if __name__ == '__main__':
     # The different problem sizes to benchmark.
