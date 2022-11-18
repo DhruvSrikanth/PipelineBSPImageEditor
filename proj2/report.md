@@ -29,11 +29,13 @@ This project is an implementation of an image editor. Images are transformed bas
         - Sharpen (S) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
             $$
+
             \begin{bmatrix}
-            0 & -1 & 0 \\
-            -1 & 5 & -1 \\
-            0 & -1 & 0
+                0 & -1 & 0 \\
+                -1 & 5 & -1 \\
+                0 & -1 & 0
             \end{bmatrix}
+            
             $$
         
         - Blur (B) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
@@ -41,9 +43,9 @@ This project is an implementation of an image editor. Images are transformed bas
             $$
             \frac{1}{9}
             \begin{bmatrix}
-            1 & 1 & 1 \\
-            1 & 1 & 1 \\
-            1 & 1 & 1
+                1 & 1 & 1 \\
+                1 & 1 & 1 \\
+                1 & 1 & 1
             \end{bmatrix}
             $$
         
@@ -51,9 +53,9 @@ This project is an implementation of an image editor. Images are transformed bas
             
             $$
             \begin{bmatrix}
-            -1 & -1 & -1 \\
-            -1 & 8 & -1 \\
-            -1 & -1 & -1
+                -1 & -1 & -1 \\
+                -1 & 8 & -1 \\
+                -1 & -1 & -1
             \end{bmatrix}
             $$
 
