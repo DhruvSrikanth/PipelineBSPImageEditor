@@ -30,8 +30,8 @@ This project is an implementation of an image editor. Images are transformed bas
             
             $$
             \begin{bmatrix}
-                0 & -1 & 0 \\
-                -1 & 5 & -1 \\
+                0 & -1 & 0\\
+                -1 & 5 & -1\\
                 0 & -1 & 0
             \end{bmatrix}
             $$
@@ -41,8 +41,8 @@ This project is an implementation of an image editor. Images are transformed bas
             $$
             \frac{1}{9}
             \begin{bmatrix}
-                1 & 1 & 1 \\
-                1 & 1 & 1 \\
+                1 & 1 & 1\\
+                1 & 1 & 1\\
                 1 & 1 & 1
             \end{bmatrix}
             $$
@@ -51,8 +51,8 @@ This project is an implementation of an image editor. Images are transformed bas
             
             $$
             \begin{bmatrix}
-                -1 & -1 & -1 \\
-                -1 & 8 & -1 \\
+                -1 & -1 & -1\\
+                -1 & 8 & -1\\
                 -1 & -1 & -1
             \end{bmatrix}
             $$
