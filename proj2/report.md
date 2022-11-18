@@ -29,13 +29,11 @@ This project is an implementation of an image editor. Images are transformed bas
         - Sharpen (S) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
             $$
-
             \begin{bmatrix}
                 0 & -1 & 0 \\
                 -1 & 5 & -1 \\
                 0 & -1 & 0
             \end{bmatrix}
-            
             $$
         
         - Blur (B) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
