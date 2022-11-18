@@ -39,7 +39,8 @@ This project is an implementation of an image editor. Images are transformed bas
         - Blur (B) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
             $$
-            \frac{1}{9}\begin{bmatrix}
+            \frac{1}{9}
+            \begin{bmatrix}
                 1 & 1 & 1 \\
                 1 & 1 & 1 \\
                 1 & 1 & 1
@@ -48,13 +49,7 @@ This project is an implementation of an image editor. Images are transformed bas
         
         - Edge Detection (E) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
-            $$
-            \begin{bmatrix}
-                -1 & -1 & -1 \\
-                -1 & 8 & -1 \\
-                -1 & -1 & -1
-            \end{bmatrix}
-            $$
+            $$\begin{bmatrix} -1 & -1 & -1 \\ -1 & 8 & -1 \\ -1 & -1 & -1 \end{bmatrix}$$
 
     - **Note that these identifiers for each effect are case sensitive.**
     - Convolution is perform on a 2D image grid by convolving the kernel across the image. The convolution operation can be thought of as a sliding window computation over the entire image. The computation being performed is the frobenius inner product which is the sum over element wise products between the kernel and patch of image overlapping with the kernel. **Zero padding** is used at the edges of the image. The convolution operation can be seen below - 
