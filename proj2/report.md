@@ -28,8 +28,7 @@ This project is an implementation of an image editor. Images are transformed bas
         - Grayscale (G) - Each pixel's color channels are computed by averaging over the each the original pixel's color channel values.
         - Sharpen (S) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
-            $$
-            \begin{bmatrix}
+            $$\begin{bmatrix}
                 0 & -1 & 0\\
                 -1 & 5 & -1\\
                 0 & -1 & 0
@@ -38,8 +37,7 @@ This project is an implementation of an image editor. Images are transformed bas
         
         - Blur (B) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
-            $$
-            \frac{1}{9}\begin{bmatrix}
+            $$\frac{1}{9}\begin{bmatrix}
                 1 & 1 & 1\\
                 1 & 1 & 1\\
                 1 & 1 & 1
@@ -48,8 +46,7 @@ This project is an implementation of an image editor. Images are transformed bas
         
         - Edge Detection (E) - The following kernel is used as part of the convolution operation applied at every pixel using the convolution operation - 
             
-            $$
-            \begin{bmatrix}
+            $$\begin{bmatrix}
                 -1 & -1 & -1\\
                 -1 & 8 & -1\\
                 -1 & -1 & -1
